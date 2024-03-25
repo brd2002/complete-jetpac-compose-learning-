@@ -15,9 +15,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,7 +34,8 @@ class MainActivity : ComponentActivity() {
 //            App()
 //            ListComposable()
 //            Counter()
-            LaunchEffectComposable()
+//            LaunchEffectComposable()
+            App1()
         }
     }
 }
@@ -111,3 +114,32 @@ fun LaunchEffectComposable() {
     }
     Text(text = text)
 }
+fun a () {
+    Log.d("bharat", "a: this is a  function is running..")
+}
+fun b() {
+    Log.d("bharat", "b: this is b function is running ...")
+}
+
+@Composable
+fun App1() {
+    var state = remember {
+        mutableStateOf(::a)
+    }
+    Button(onClick = {state.value = ::b}) {
+        Text(text = "Change the state")
+    }
+    LandingScreen {
+        state.value
+    }
+}
+@Composable
+fun LandingScreen(onTimeout:()->Unit) {
+    val currentOnTimeout by rememberUpdatedState(onTimeout)
+    LaunchedEffect(key1 = true) {
+        delay(8000)
+        currentOnTimeout()
+    }
+}
+
+
