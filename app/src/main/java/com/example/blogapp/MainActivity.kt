@@ -17,10 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.blogapp.ui.theme.BlogAppTheme
+import kotlinx.coroutines.delay
+import java.lang.Exception
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +31,8 @@ class MainActivity : ComponentActivity() {
         setContent {
 //            App()
 //            ListComposable()
-            Counter()
+//            Counter()
+            LaunchEffectComposable()
         }
     }
 }
@@ -81,4 +85,29 @@ fun Counter() {
     Button(onClick = {count.value++}) {
         Text(text = "Increment the value of count")
     }
+}
+
+@Composable
+fun LaunchEffectComposable() {
+    var counter = remember {
+        mutableStateOf(0)
+    }
+    var scope = rememberCoroutineScope()
+    LaunchedEffect(key1 = Unit) {
+        Log.d("now", "LaunchEffectComposable: is started from this now ....")
+        try {
+            for(i in 1..100){
+                counter.value++
+                delay(1000)
+            }
+        }
+        catch (e:Exception){
+            Log.d("exception", "LaunchEffectComposable: ${e.message.toString()}")
+        }
+    }
+    var text = "Counter is running ${counter.value}"
+    if(counter.value == 10 ){
+        text = "Counter stopped"
+    }
+    Text(text = text)
 }
